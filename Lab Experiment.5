@@ -1,0 +1,148 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<malloc.h>
+#include<stdlib.h>
+#include<string.h>
+int precedence(char op){
+    switch(op){
+        case '+':
+        case '-':
+        return 1;
+
+        case '*':
+        case '/':
+        return 2;
+
+        case '^':
+        return 3;
+
+        default:
+        return -1;
+    }
+}
+char* convertinfixtopretfix(char *exp){
+    int size=strlen(exp),top=-1,index=0;
+    char operator[size];
+    char* str=(char*)malloc(size+1);
+    for( int i=size-1;i>=0;i--){
+        char ch=exp[i];
+        if(isdigit(ch)||isalpha(ch))
+        str[index++]=ch;
+        else if( ch== '+'||ch =='-'|| ch== '*'||ch =='/'|| ch=='^'){
+            if(top==-1)
+            operator[++top]=ch;
+            else{
+                while(top!=-1 && precedence(ch)<=precedence(operator[top])){
+                    str[index++]=operator[top--];
+                }
+                operator[++top]=ch;
+            }
+            
+        }
+        else if(ch==')')
+        operator[++top]=ch;
+        else if(ch=='('){
+            while(operator[top]!=')'){
+str[index++]=operator[top--];
+            }
+            top--;
+        }
+    }
+    while(top!=-1){
+        str[index++]=operator[top--];
+    }
+    str[index]='\0';
+return strrev(str);
+}
+char* convertpostfixtotoinfix(char *exp){
+    int size =strlen(exp), top=-1;
+    char stack[size][100];
+    for( int i = 0;i<size;i++){
+        char ch=exp[i];
+        if(isalnum(ch)){
+            char temp[]={ch,'\0'};
+            strcpy(stack[++top],temp);
+        }
+        else if(ch=='+'|| ch=='-'|| ch=='*'|| ch=='/'|| ch=='^'){
+            char *s1=stack[top--];
+            char *s2=stack[top--];
+            char s3[100];
+            snprintf(s3,100,"(%s%c%s)",s2,ch,s1);
+            strcpy(stack[++top],s3);
+        }
+       
+    }
+    char *s= stack[top];
+    return s;
+}
+char* convertinfixtopostfix(char *exp){
+    int size=strlen(exp),top=-1,index=0;
+    char operator[size];
+    char* str=(char*)malloc(size+1);
+    for( int i=0;i<size;i++){
+        char ch=exp[i];
+        if(isdigit(ch)||isalpha(ch))
+        str[index++]=ch;
+        else if( ch== '+'||ch =='-'|| ch== '*'||ch =='/'|| ch=='^'){
+            if(top==-1)
+            operator[++top]=ch;
+            else{
+                while(top!=-1 && precedence(ch)<=precedence(operator[top])){
+                    str[index++]=operator[top--];
+                }
+                operator[++top]=ch;
+            }
+            
+        }
+        else if(ch=='(')
+        operator[++top]=ch;
+        else if(ch==')'){
+            while(operator[top]!='('){
+str[index++]=operator[top--];
+            }
+            top--;
+        }
+    }
+    while(top!=-1){
+        str[index++]=operator[top--];
+    }
+    str[index]='\0';
+return str;
+}
+char* convertprefixtotoinfix(char *exp){
+    int size =strlen(exp), top=-1;
+    char stack[size][100];
+    for( int i = size-1;i>=0;i--){
+        char ch=exp[i];
+        if(isalnum(ch)){
+            char temp[]={ch,'\0'};
+            strcpy(stack[++top],temp);
+        }
+        else if(ch=='+'|| ch=='-'|| ch=='*'|| ch=='/'|| ch=='^'){
+            char *s1=stack[top--];
+            char *s2=stack[top--];
+            char s3[100];
+            snprintf(s3,100,"(%s%c%s)",s1,ch,s2);
+            strcpy(stack[++top],s3);
+        }
+       
+    }
+    char *s= stack[top];
+    return s;
+}
+int main(){
+    char exp[100];
+    printf("Enter infix expression = ");
+    gets(exp);
+    printf("Prefix form of infix expression %s is %s\n",exp,convertinfixtopretfix(exp));
+    printf("Prefix form of infix expression %s is %s\n",exp,convertinfixtopostfix(exp));
+
+    printf("Enter postfix expression = ");
+    gets(exp);
+    printf("Infix form of postfix expression %s is %s\n",exp,convertpostfixtotoinfix(exp));
+
+    printf("Enter prefix expression = ");
+    gets(exp);
+    printf("Infix form of prefix expression %s is %s\n",exp,convertprefixtotoinfix(exp));
+    return 0;
+}
