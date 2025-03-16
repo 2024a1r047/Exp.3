@@ -1,0 +1,104 @@
+#include<stdio.h>
+#define MAX_SIZE 100
+void insert(int *list, int *size){
+	int pos, value, i;
+	printf("Enter Position : ");
+	scanf("%d", &pos);
+	printf("Enter Value : ");
+	scanf("%d", &value);
+	pos--;
+	if(pos<0 || pos>*size-1)
+		printf("Invalid Position !!!!!\n");
+	else{
+		for(i=*size; i>=pos; i--){
+			list[i]=list[i-1];
+		}
+		list[pos]=value;
+		*size = *size + 1;
+		printf("Element Inserted Successfully !!!!!\n");
+	}
+}
+void displayList(int *list, int size){ 
+	int i;
+	printf("List Elements are : \n");
+	for(i=0; i<size; i++){
+		printf("%d ", list[i]);
+	}
+}
+void delete(int *list, int *size){
+	int pos, i;
+	printf("Enter Position : ");
+	scanf("%d", &pos);
+	pos--;
+	if(pos<0 || pos >*size-1)
+		printf("Invalid Position !!!!!\n");
+	else if(pos == *size - 1){
+		*size = *size - 1;
+		printf("Element Deleted !!!!\n");
+	}
+	else{
+		for(i=0; i<*size-1; i++){
+			if(pos <= i){
+				list[i] = list[i+1];
+			}
+		}
+		*size = *size - 1;
+		printf("Element Deleted !!!!!!\n");
+	}
+}
+void search(int *list, int size){
+	int val, i, flag = 0;
+	printf("Enter Searching Element : ");
+	scanf("%d", &val);
+	for(i=0; i<size; i++){
+		if(val == list[i]){
+			flag=1;
+			break;
+		}
+	}
+	if(flag == 1)
+		printf("Element found at index %d\n",i);
+	else
+		printf("Element not found !!!!\n");
+}
+int main(){
+	int list[MAX_SIZE], size, i;
+	printf("Enter List Size : ");
+	scanf("%d", &size);
+	printf("Enter Elements In List : ");
+	for(i=0; i<size; i++){
+		scanf("%d", &list[i]);
+	}
+	while(1){
+		printf("1. Insertion\n");
+		printf("2. Deletion\n");
+		printf("3. Searching\n");
+		printf("4. Traversing\n");
+		printf("5. Exit\n");
+		int choice;
+		printf("Enter Choice : ");
+		scanf("%d", &choice);
+		switch(choice){
+			case 1:
+				insert(list, &size);
+				break;
+			case 2:
+				delete(list, &size);
+				break;
+			case 3:
+				search(list, size);
+				break;
+			case 4:
+				displayList(list, size);
+				break;
+			case 5:
+				exit(0);
+				break;
+			default:
+				printf("Invalid Choice !!!!\n");
+		}
+		printf("\n");
+		system("pause");
+	}
+	return 0;
+}
